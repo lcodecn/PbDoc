@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PbDoc Library Reference Documentation</title>
+  <style>
+    body { font-family: "Segoe UI", Arial, sans-serif; margin: 0; padding: 0; background: #f8f8f8; color: #333; }
+    .header { background: linear-gradient(135deg, #217346 0%, #185c37 100%); color: white; padding: 30px; text-align: center; }
+    .header h1 { margin: 0; font-size: 2.2em; }
+    .header .version { font-size: 1em; opacity: 0.9; margin-top: 10px; }
+    .header .author { font-size: 0.9em; opacity: 0.8; margin-top: 5px; }
+    .nav { background: #2b2b2b; padding: 15px; overflow: auto; }
+    .nav a { color: #fff; text-decoration: none; padding: 5px 15px; display: inline-block; font-size: 0.9em; }
+    .nav a:hover { background: #444; border-radius: 4px; }
+    .container { max-width: 960px; margin: 20px auto; padding: 0 20px; }
+    .section { background: white; margin: 20px 0; padding: 25px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .section h2 { color: #217346; border-bottom: 2px solid #e0e0e0; padding-bottom: 10px; margin-top: 0; }
+    .section h3 { color: #333; margin-top: 25px; }
+    .function-block { background: #f5f5f5; padding: 15px; margin: 15px 0; border-left: 4px solid #217346; border-radius: 0 4px 4px 0; }
+    .function-name { color: #c7254e; font-family: "Consolas", "Courier New", monospace; font-size: 1.1em; font-weight: bold; }
+    .function-desc { margin: 10px 0; line-height: 1.6; }
+    .function-params { margin: 10px 0; }
+    .function-params table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+    .function-params th { background: #e8e8e8; padding: 8px; text-align: left; border: 1px solid #ddd; }
+    .function-params td { padding: 8px; border: 1px solid #ddd; }
+    .return-type { background: #e8f5e9; padding: 8px; border-radius: 4px; margin: 10px 0; }
+    .example { background: #263238; color: #e0e0e0; padding: 15px; border-radius: 4px; overflow-x: auto; font-family: "Consolas", "Courier New", monospace; font-size: 0.9em; margin: 10px 0; white-space: pre; line-height: 1.6; }
+    .example .comment { color: #80cbc4; }
+    .example .keyword { color: #c792ea; }
+    .example .function { color: #82b1ff; }
+    .example .string { color: #c3e88d; }
+    .example .number { color: #f78c6c; }
+    .example .variable { color: #ffcb6b; }
+    .toc { background: white; padding: 20px; margin: 20px 0; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .toc h3 { margin-top: 0; }
+    .toc ul { list-style: none; padding-left: 0; }
+    .toc li { padding: 5px 0; border-bottom: 1px solid #f0f0f0; }
+    .toc a { color: #217346; text-decoration: none; }
+    .toc a:hover { text-decoration: underline; }
+    .note { background: #fff3cd; padding: 12px; border-left: 4px solid #ffc107; border-radius: 4px; margin: 15px 0; }
+    .note strong { color: #856404; }
+    .footer { text-align: center; padding: 20px; color: #666; font-size: 0.9em; margin-top: 40px; }
+    code { background: #f0f0f0; padding: 2px 6px; border-radius: 3px; font-family: "Consolas", "Courier New", monospace; font-size: 0.9em; }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <h1>PbDoc Library</h1>
+  <div class="version">Version 1.3</div>
+  <div class="author">Author: lcode.cn | License: Apache 2.0</div>
+</div>
+
+<div class="nav">
+  <a href="#overview">Overview</a>
+  <a href="#init">Initialization</a>
+  <a href="#document">Document</a>
+  <a href="#paragraph">Paragraph</a>
+  <a href="#run">Run</a>
+  <a href="#font">Font</a>
+  <a href="#paraformat">Para Format</a>
+  <a href="#heading">Heading</a>
+  <a href="#hyperlink">Hyperlink</a>
+  <a href="#pagebreak">Page Break</a>
+  <a href="#table">Table</a>
+  <a href="#section">Page Setup</a>
+  <a href="#unit">Unit Conversion</a>
+  <a href="#enum">Enumerations</a>
+  <a href="#examples">Examples</a>
+  <a href="#changelog">Changelog</a>
+  <a href="#donate">Donate</a>
+</div>
+
+<div class="container">
+
+  <div class="section" id="overview">
+    <h2>Overview</h2>
+    <p>PbDoc is a Word document processing library implemented entirely in PureBasic. It can create .docx files conforming to the Office Open XML standard without requiring Microsoft Office or any third-party dependencies.</p>
+    <p>This library is written with reference to the Python python-docx project, using PureBasic's built-in Packer (ZIP compression) library.</p>
+    <div class="note">
+      <strong>Note:</strong> Before using the PbDoc library, you need to add <code>XIncludeFile "PbDoc.pb"</code> at the beginning of your code to include the library file, and call <code>PbDoc_Init()</code> for initialization.
+    </div>
+    <h3>Key Features</h3>
+    <ul>
+      <li>Create Word .docx files</li>
+      <li>Document property settings (title, author, subject, company)</li>
+      <li>Paragraph operations (add, align, style)</li>
+      <li>Heading levels 1-9</li>
+      <li>Font formatting (bold, italic, underline, strikethrough, superscript/subscript, font name, color, highlight, font size)</li>
+      <li>Paragraph formatting (indentation, spacing, line spacing, page break control)</li>
+      <li>Tab stops (left/right/center/decimal alignment, 5 leader types)</li>
+      <li>Table operations (create, style, alignment, column width, cells)</li>
+      <li>Hyperlinks</li>
+      <li>Page breaks, line breaks, column breaks</li>
+      <li>Page setup (paper size, margins, orientation)</li>
+      <li>Unit conversion (EMU/twips/points/cm/inches)</li>
+    </ul>
+  </div>
+
+  <div class="toc">
+    <h3>Function Index</h3>
+    <ul>
+      <li><a href="#PbDoc_Init">PbDoc_Init</a> - Initialize library</li>
+      <li><a href="#PbDoc_Cleanup">PbDoc_Cleanup</a> - Cleanup resources</li>
+      <li><a href="#PbDocument_Create">PbDocument_Create</a> - Create document</li>
+      <li><a href="#PbDocument_Save">PbDocument_Save</a> - Save document</li>
+      <li><a href="#PbDocument_Free">PbDocument_Free</a> - Free document</li>
+      <li><a href="#PbDocument_SetTitle">PbDocument_SetTitle</a> - Set title</li>
+      <li><a href="#PbDocument_SetAuthor">PbDocument_SetAuthor</a> - Set author</li>
+      <li><a href="#PbDoc_Document_AddParagraph">AddParagraph</a> - Add paragraph</li>
+      <li><a href="#PbDoc_Document_AddHeading">AddHeading</a> - Add heading</li>
+      <li><a href="#PbDoc_Paragraph_AddRun">AddRun</a> - Add Run</li>
+      <li><a href="#PbDoc_Font_SetBold">SetFontBold</a> - Set bold</li>
+      <li><a href="#PbDoc_Font_SetItalic">SetFontItalic</a> - Set italic</li>
+      <li><a href="#PbDoc_Font_SetUnderline">SetFontUnderline</a> - Set underline</li>
+      <li><a href="#PbDoc_Font_SetColorHex">SetFontColorHex</a> - Set color</li>
+      <li><a href="#PbDoc_Font_SetSize">SetFontSize</a> - Set font size</li>
+      <li><a href="#PbDoc_ParaFormat_AddTabStop">AddTabStop</a> - Add tab stop</li>
+      <li><a href="#PbDoc_Document_AddTable">AddTable</a> - Create table</li>
+      <li><a href="#PbDoc_Cell_SetText">CellSetText</a> - Set cell text</li>
+      <li><a href="#PbDoc_Document_AddHyperlink">AddHyperlink</a> - Add hyperlink</li>
+      <li><a href="#PbDoc_Document_AddPageBreak">AddPageBreak</a> - Add page break</li>
+      <li><a href="#PbDoc_Section_SetPageSize">SetPageSize</a> - Set page size</li>
+      <li><a href="#PbDoc_Section_SetMargins">SetMargins</a> - Set margins</li>
+    </ul>
+  </div>
+
+  <!-- ==================== Initialization ==================== -->
+  <div class="section" id="init">
+    <h2>Initialization and Cleanup</h2>
+
+    <div class="function-block" id="PbDoc_Init">
+      <div class="function-name">PbDoc_Init()</div>
+      <div class="function-desc">Initialize the PbDoc library. This function must be called before using any PbDoc features.</div>
+      <div class="return-type"><strong>Returns:</strong> #True on success, #False on failure.</div>
+      <div class="example">
+<span class="comment">; Initialize PbDoc library</span>
+<span class="keyword">If</span> <span class="function">PbDoc_Init</span>() = <span class="variable">#False</span>
+  <span class="function">Debug</span> <span class="string">"Initialization failed"</span>
+  <span class="keyword">End</span>
+<span class="keyword">EndIf</span>
+      </div>
+    </div>
+
+    <div class="function-block" id="PbDoc_Cleanup">
+      <div class="function-name">PbDoc_Cleanup()</div>
+      <div class="function-desc">Clean up all resources used by the PbDoc library. This function should be called before the program exits.</div>
+    </div>
+  </div>
+
+  <!-- ==================== Document Operations ==================== -->
+  <div class="section" id="document">
+    <h2>Document Operations</h2>
+
+    <div class="function-block" id="PbDocument_Create">
+      <div class="function-name">PbDocument_Create()</div>
+      <div class="function-desc">Create a new blank document. Returns a document object pointer, which is used for all subsequent operations.</div>
+      <div class="return-type"><strong>Returns:</strong> Document object pointer (PbDocument). Returns 0 on failure.</div>
+      <div class="example">
+<span class="variable">*doc</span>.<span class="keyword">PbDocument</span> = <span class="function">PbDocument_Create</span>()
+<span class="keyword">If</span> <span class="variable">*doc</span> = 0
+  <span class="function">Debug</span> <span class="string">"Failed to create document"</span>
+<span class="keyword">EndIf</span>
+      </div>
+    </div>
+
+    <div class="function-block" id="PbDocument_Save">
+      <div class="function-name">PbDocument_Save(*doc.PbDocument, filePath.s)</div>
+      <div class="function-desc">Save the document as a .docx file. This function generates a ZIP archive conforming to the Office Open XML standard.</div>
+      <div class="function-params">
+        <table>
+          <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
+          <tr><td>*doc</td><td>PbDocument</td><td>Document object pointer</td></tr>
+          <tr><td>filePath</td><td>String</td><td>Output file path (.docx extension)</td></tr>
+        </table>
+      </div>
+      <div class="return-type"><strong>Returns:</strong> #True on success, #False on failure.</div>
+      <div class="example">
+<span class="keyword">If</span> <span class="function">PbDocument_Save</span>(<span class="variable">*doc</span>, <span class="string">"output.docx"</span>)
+  <span class="function">Debug</span> <span class="string">"Save successful"</span>
+<span class="keyword">Else</span>
+  <span class="function">Debug</span> <span class="string">"Save failed: "</span> + <span class="function">PbDoc_GetLastError</span>()
+<span class="keyword">EndIf</span>
+      </div>
+    </div>
+
+    <div class="function-block" id="PbDocument_Free">
+      <div class="function-name">PbDocument_Free(*doc.PbDocument)</div>
+      <div class="function-desc">Release all memory resources used by the document. This should be called after saving.</div>
+    </div>
+
+    <div class="function-block" id="PbDocument_SetTitle">
+      <div class="function-name">PbDocument_SetTitle(*doc.PbDocument, title.s)</div>
+      <div class="function-desc">Set the document title. This property is written to docProps/core.xml.</div>
+      <div class="function-params">
+        <table>
+          <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
+          <tr><td>*doc</td><td>PbDocument</td><td>Document object pointer</td></tr>
+          <tr><td>title</td><td>String</td><td>Document title</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="function-block" id="PbDocument_SetAuthor">
+      <div class="function-name">PbDocument_SetAuthor(*doc.PbDocument, author.s)</div>
+      <div class="function-desc">Set the document author.</div>
+    </div>
+
+    <div class="function-block">
+      <div class="function-name">PbDocument_SetSubject(*doc.PbDocument, subject.s)</div>
+      <div class="function-desc">Set the document subject.</div>
+    </div>
+
+    <div class="function-block">
+      <div class="function-name">PbDocument_SetCompany(*doc.PbDocument, company.s)</div>
+      <div class="function-desc">Set the company name. This property is written to docProps/app.xml.</div>
+    </div>
+  </div>
+
+  <!-- ==================== Paragraph Operations ==================== -->
+  <div class="section" id="paragraph">
+    <h2>Paragraph Operations</h2>
+
+    <div class="function-block" id="PbDoc_Document_AddParagraph">
+      <div class="function-name">PbDoc_Document_AddParagraph(*doc.PbDocument, text.s)</div>
+      <div class="function-desc">Add a paragraph. If text is provided, a Run containing that text is automatically created.</div>
+      <div class="function-params">
+        <table>
+          <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
+          <tr><td>*doc</td><td>PbDocument</td><td>Document object pointer</td></tr>
+          <tr><td>text</td><td>String</td><td>Paragraph text (can be an empty string)</td></tr>
+        </table>
+      </div>
+      <div class="return-type"><strong>Returns:</strong> Paragraph object pointer (PbDocParagraph).</div>
+      <div class="example">
+<span class="comment">; Add a normal paragraph</span>
+<span class="function">PbDoc_Document_AddParagraph</span>(<span class="variable">*doc</span>, <span class="string">"This is paragraph text"</span>)
+
+<span class="comment">; Add an empty paragraph, then manually add Runs</span>
+<span class="variable">*para</span> = <span class="function">PbDoc_Document_AddParagraph</span>(<span class="variable">*doc</span>, <span class="string">""</span>)
+      </div>
+    </div>
+
+    <div class="function-block">
+      <div class="function-name">PbDoc_Paragraph_SetAlignment(*para.PbDocParagraph, alignment.l)</div>
+      <div class="function-desc">Set paragraph alignment.</div>
+      <div class="function-params">
+        <table>
+          <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
+          <tr><td>alignment</td><td>Integer</td><td>Alignment enum: #PbDoc_ALIGN_LEFT, #PbDoc_ALIGN_CENTER, #PbDoc_ALIGN_RIGHT, #PbDoc_ALIGN_JUSTIFY, #PbDoc_ALIGN_DISTRIBUTE</td></tr>
+        </table>
+      </div>
+      <div class="example">
+<span class="variable">*para</span> = <span class="function">PbDoc_Document_AddParagraph</span>(<span class="variable">*doc</span>, <span class="string">"Centered text"</span>)
+<span class="function">PbDoc_Paragraph_SetAlignment</span>(<span class="variable">*para</span>, <span class="variable">#PbDoc_ALIGN_CENTER</span>)
+      </div>
+    </div>
+
+    <div class="function-block" id="PbDoc_Document_AddHeading">
+      <div class="function-name">PbDoc_Document_AddHeading(*doc.PbDocument, text.s, level.l)</div>
+      <div class="function-desc">Add a heading paragraph. Headings automatically apply built-in Heading styles.</div>
+      <div class="function-params">
+        <table>
+          <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
+          <tr><td>text</td><td>String</td><td>Heading text</td></tr>
+          <tr><td>level</td><td>Integer</td><td>Heading level (1-9), 1 is the highest level</td></tr>
+        </table>
+      </div>
+      <div class="return-type"><strong>Returns:</strong> Paragraph object pointer.</div>
+      <div class="example">
+<span class="function">PbDoc_Document_AddHeading</span>(<span class="variable">*doc</span>, <span class="string">"Chapter 1 Introduction"</span>, 1)
+<span class="function">PbDoc_Document_AddHeading</span>(<span class="variable">*doc</span>, <span class="string">"1.1 Background"</span>, 2)
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== Run Operations ==================== -->
+  <div class="section" id="run">
+    <h2>Run Operations</h2>
+    <p>A Run is a segment of text within a paragraph that has the same formatting. A paragraph can contain multiple Runs, each with different formatting.</p>
+
+    <div class="function-block" id="PbDoc_Paragraph_AddRun">
+      <div class="function-name">PbDoc_Paragraph_AddRun(*para.PbDocParagraph, text.s)</div>
+      <div class="function-desc">Add a text run (Run) to a paragraph.</div>
+      <div class="return-type"><strong>Returns:</strong> Run object pointer (PbDocRun).</div>
+      <div class="example">
+<span class="variable">*para</span> = <span class="function">PbDoc_Document_AddParagraph</span>(<span class="variable">*doc</span>, <span class="string">""</span>)
+<span class="variable">*run1</span> = <span class="function">PbDoc_Paragraph_AddRun</span>(<span class="variable">*para</span>, <span class="string">"Normal text "</span>)
+<span class="variable">*run2</span> = <span class="function">PbDoc_Paragraph_AddRun</span>(<span class="variable">*para</span>, <span class="string">"Bold text"</span>)
+<span class="function">PbDoc_Font_SetBold</span>(<span class="variable">*run2</span>, <span class="variable">#True</span>)
+      </div>
+    </div>
+
+    <div class="function-block">
+      <div class="function-name">PbDoc_Run_AddTab(*run.PbDocRun)</div>
+      <div class="function-desc">Add a Tab character to a Run.</div>
+    </div>
+
+    <div class="function-block">
+      <div class="function-name">PbDoc_Run_AddBreak(*run.PbDocRun, breakType.l)</div>
+      <div class="function-desc">Add a break to a Run.</div>
+      <div class="function-params">
+        <table>
+          <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
+          <tr><td>breakType</td><td>Integer</td><td>#PbDoc_BREAK_LINE (line break), #PbDoc_BREAK_PAGE (page break), #PbDoc_BREAK_COLUMN (column break)</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== Font Formatting ==================== -->
+  <div class="section" id="font">
+    <h2>Font Formatting</h2>
+
+    <div class="function-block" id="PbDoc_Font_SetBold">
+      <div class="function-name">PbDoc_Font_SetBold(*run.PbDocRun, bold.l)</div>
+      <div class="function-desc">Set bold.</div>
+    </div>
+
+    <div class="function-block" id="PbDoc_Font_SetItalic">
+      <div class="function-name">PbDoc_Font_SetItalic(*run.PbDocRun, italic.l)</div>
+      <div class="function-desc">Set italic.</div>
+    </div>
+
+    <div class="function-block" id="PbDoc_Font_SetUnderline">
+      <div class="function-name">PbDoc_Font_SetUnderline(*run.PbDocRun, underline.l)</div>
+      <div class="function-desc">Set underline type.</div>
+      <div class="function-params">
+        <table>
+          <tr><th>Enum Value</th><th>Description</th></tr>
+          <tr><td>#PbDoc_UNDERLINE_SINGLE</td><td>Single underline</td></tr>
+          <tr><td>#PbDoc_UNDERLINE_DOUBLE</td><td>Double underline</td></tr>
+          <tr><td>#PbDoc_UNDERLINE_DOTTED</td><td>Dotted underline</td></tr>
+          <tr><td>#PbDoc_UNDERLINE_DASH</td><td>Dashed underline</td></tr>
+          <tr><td>#PbDoc_UNDERLINE_WAVE</td><td>Wavy underline</td></tr>
+          <tr><td>#PbDoc_UNDERLINE_THICK</td><td>Thick underline</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="function-block">
+      <div class="function-name">PbDoc_Font_SetStrike(*run.PbDocRun, strike.l)</div>
+      <div class="function-desc">Set strikethrough.</div>
+    </div>
+
+    <div class="function-block">
+      <div class="function-name">PbDoc_Font_SetDoubleStrike(*run.PbDocRun, doubleStrike.l)</div>
+      <div class="function-desc">Set double strikethrough.</div>
+    </div>
+
+    <div class="function-block">
+      <div class="function-name">PbDoc_Font_SetSuperscript(*run.PbDocRun, superscript.l)</div>
+      <div class="function-desc">Set superscript.</div>
+    </div>
+
+    <div class="function-block">
+      <div class="function-name">PbDoc_Font_SetSubscript(*run.PbDocRun, subscript.l)</div>
+      <div class="function-desc">Set subscript.</div>
+    </div>
+
+    <div class="function-block">
+      <div class="function-name">PbDoc_Font_SetName(*run.PbDocRun, fontName.s)</div>
+      <div class="function-desc">Set font name, e.g. "SimSun", "Arial".</div>
+    </div>
+
+    <div class="function-block" id="PbDoc_Font_SetColorHex">
+      <div class="function-name">PbDoc_Font_SetColorHex(*run.PbDocRun, colorHex.s)</div>
+      <div class="function-desc">Set font color (hexadecimal format).</div>
+      <div class="example">
+<span class="function">PbDoc_Font_SetColorHex</span>(<span class="variable">*run</span>, <span class="string">"FF0000"</span>)  <span class="comment">; Red</span>
+<span class="function">PbDoc_Font_SetColorHex</span>(<span class="variable">*run</span>, <span class="string">"0000FF"</span>)  <span class="comment">; Blue</span>
+      </div>
+    </div>
+
+    <div class="function-block">
+      <div class="function-name">PbDoc_Font_SetColorRGB(*run.PbDocRun, r.a, g.a, b.a)</div>
+      <div class="function-desc">Set font color (RGB format, 0-255).</div>
+      <div class="example">
+<span class="function">PbDoc_Font_SetColorRGB</span>(<span class="variable">*run</span>, 255, 165, 0)  <span class="comment">; Orange</span>
+      </div>
+    </div>
+
+    <div class="function-block">
+      <div class="function-name">PbDoc_Font_SetHighlight(*run.PbDocRun, highlight.s)</div>
+      <div class="function-desc">Set highlight color. Common values: "yellow", "green", "cyan", "red", "blue".</div>
+    </div>
+
+    <div class="function-block" id="PbDoc_Font_SetSize">
+      <div class="function-name">PbDoc_Font_SetSize(*run.PbDocRun, size.l)</div>
+      <div class="function-desc">Set font size (points).</div>
+      <div class="example">
+<span class="function">PbDoc_Font_SetSize</span>(<span class="variable">*run</span>, 12)  <span class="comment">; 12pt</span>
+<span class="function">PbDoc_Font_SetSize</span>(<span class="variable">*run</span>, 24)  <span class="comment">; 24pt</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== Paragraph Formatting ==================== -->
+  <div class="section" id="paraformat">
+    <h2>Paragraph Formatting</h2>
+
+    <div class="function-block">
+      <div class="function-name">PbDoc_ParaFormat_SetFirstLineIndent(*para.PbDocParagraph, emu.q)</div>
+      <div class="function-desc">Set first line indent. Parameter is in EMU units.</div>
+      <div class="example">
+<span class="comment">; First line indent of 2 characters (approx. 0.74cm)</span>
+<span class="function">PbDoc_ParaFormat_SetFirstLineIndent</span>(<span class="variable">*para</span>, <span class="function">PbDoc_CmToEmu</span>(0.74))
+      </div>
+    </div>
+
+    <div class="function-block">
+      <div class="function-name">PbDoc_ParaFormat_SetLeftIndent(*para.PbDocParagraph, emu.q)</div>
+      <div class="function-desc">Set left indent.</div>
+    </div>
+
+    <div class="function-block">
+      <div class="function-name">PbDoc_ParaFormat_SetRightIndent(*para.PbDocParagraph, emu.q)</div>
+      <div class="function-desc">Set right indent.</div>
+    </div>
+
+    <div class="function-block">
+      <div class="function-name">PbDoc_ParaFormat_SetHangingIndent(*para.PbDocParagraph, emu.q)</div>
+      <div class="function-desc">Set hanging indent.</div>
+    </div>
+
+    <div class="function-block">
+      <div class="function-name">PbDoc_ParaFormat_SetSpaceBefore(*para.PbDocParagraph, emu.q)</div>
+      <div class="function-desc">Set space before paragraph.</div>
+      <div class="example">
+<span class="comment">; Space before paragraph: 12pt</span>
+<span class="function">PbDoc_ParaFormat_SetSpaceBefore</span>(<span class="variable">*para</span>, <span class="function">PbDoc_PtToEmu</span>(12))
+      </div>
+    </div>
+
+    <div class="function-block">
+      <div class="function-name">PbDoc_ParaFormat_SetSpaceAfter(*para.PbDocParagraph, emu.q)</div>
+      <div class="function-desc">Set space after paragraph.</div>
+    </div>
+
+    <div class="function-block">
+      <div class="function-name">PbDoc_ParaFormat_SetLineSpacing(*para.PbDocParagraph, spacing.q, rule.l)</div>
+      <div class="function-desc">Set line spacing.</div>
+      <div class="function-params">
+        <table>
+          <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
+          <tr><td>spacing</td><td>Quad</td><td>Line spacing value. Auto spacing: 240=single, 360=1.5x, 480=double; Exact/AtLeast spacing: twips value</td></tr>
+          <tr><td>rule</td><td>Integer</td><td>#PbDoc_LINE_SPACING_AUTO (auto), #PbDoc_LINE_SPACING_EXACT (exact), #PbDoc_LINE_SPACING_AT_LEAST (at least)</td></tr>
+        </table>
+      </div>
+      <div class="example">
+<span class="comment">; 1.5x line spacing</span>
+<span class="function">PbDoc_ParaFormat_SetLineSpacing</span>(<span class="variable">*para</span>, 360, <span class="variable">#PbDoc_LINE_SPACING_AUTO</span>)
+
+<span class="comment">; Fixed 20pt line spacing</span>
+<span class="function">PbDoc_ParaFormat_SetLineSpacing</span>(<span class="variable">*para</span>, <span class="function">PbDoc_PtToTwips</span>(20), <span class="variable">#PbDoc_LINE_SPACING_EXACT</span>)
+      </div>
+    </div>
+
+    <div class="function-block">
+      <div class="function-name">PbDoc_ParaFormat_SetKeepNext(*para.PbDocParagraph, keepNext.l)</div>
+      <div class="function-desc">Set keep with next, preventing a page break between this paragraph and the next.</div>
+    </div>
+
+    <div class="function-block">
+      <div class="function-name">PbDoc_ParaFormat_SetKeepLines(*para.PbDocParagraph, keepLines.l)</div>
+      <div class="function-desc">Set keep lines together, preventing page breaks within the paragraph.</div>
+    </div>
+
+    <div class="function-block">
+      <div class="function-name">PbDoc_ParaFormat_SetWidowControl(*para.PbDocParagraph, widowControl.l)</div>
+      <div class="function-desc">Set widow/orphan control, preventing the first or last line of a paragraph from appearing alone at the top or bottom of a page.</div>
+    </div>
+
+    <div class="function-block" id="PbDoc_ParaFormat_AddTabStop">
+      <div class="function-name">PbDoc_ParaFormat_AddTabStop(*para.PbDocParagraph, position.q, alignment.l, leader.l)</div>
+      <div class="function-desc">Add a tab stop.</div>
+      <div class="function-params">
+        <table>
+          <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
+          <tr><td>position</td><td>Quad</td><td>Position (EMU units)</td></tr>
+          <tr><td>alignment</td><td>Integer</td><td>Alignment: #PbDoc_TAB_LEFT, #PbDoc_TAB_CENTER, #PbDoc_TAB_RIGHT, #PbDoc_TAB_DECIMAL</td></tr>
+          <tr><td>leader</td><td>Integer</td><td>Leader: #PbDoc_TAB_LEADER_NONE, #PbDoc_TAB_LEADER_DOTS, #PbDoc_TAB_LEADER_DASHES, #PbDoc_TAB_LEADER_LINES</td></tr>
+        </table>
+      </div>
+      <div class="example">
+<span class="comment">; Right-aligned tab with dot leader (table of contents style)</span>
+<span class="function">PbDoc_ParaFormat_AddTabStop</span>(<span class="variable">*para</span>, <span class="function">PbDoc_CmToEmu</span>(14), <span class="variable">#PbDoc_TAB_RIGHT</span>, <span class="variable">#PbDoc_TAB_LEADER_DOTS</span>)
+<span class="variable">*run1</span> = <span class="function">PbDoc_Paragraph_AddRun</span>(<span class="variable">*para</span>, <span class="string">"Chapter 1 Introduction"</span>)
+<span class="function">PbDoc_Run_AddTab</span>(<span class="variable">*run1</span>)
+<span class="variable">*run2</span> = <span class="function">PbDoc_Paragraph_AddRun</span>(<span class="variable">*para</span>, <span class="string">"1"</span>)
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== Hyperlinks ==================== -->
+  <div class="section" id="hyperlink">
+    <h2>Hyperlinks</h2>
+
+    <div class="function-block" id="PbDoc_Document_AddHyperlink">
+      <div class="function-name">PbDoc_Document_AddHyperlink(*doc.PbDocument, url.s, text.s)</div>
+      <div class="function-desc">Add an external hyperlink.</div>
+      <div class="function-params">
+        <table>
+          <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
+          <tr><td>url</td><td>String</td><td>Hyperlink target URL</td></tr>
+          <tr><td>text</td><td>String</td><td>Hyperlink display text</td></tr>
+        </table>
+      </div>
+      <div class="return-type"><strong>Returns:</strong> Paragraph object pointer.</div>
+      <div class="example">
+<span class="function">PbDoc_Document_AddHyperlink</span>(<span class="variable">*doc</span>, <span class="string">"https://www.example.com"</span>, <span class="string">"Example Website"</span>)
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== Page Breaks ==================== -->
+  <div class="section" id="pagebreak">
+    <h2>Page Breaks and Line Breaks</h2>
+
+    <div class="function-block" id="PbDoc_Document_AddPageBreak">
+      <div class="function-name">PbDoc_Document_AddPageBreak(*doc.PbDocument)</div>
+      <div class="function-desc">Insert a page break. Subsequent content starts on a new page.</div>
+    </div>
+  </div>
+
+  <!-- ==================== Tables ==================== -->
+  <div class="section" id="table">
+    <h2>Table Operations</h2>
+
+    <div class="function-block" id="PbDoc_Document_AddTable">
+      <div class="function-name">PbDoc_Document_AddTable(*doc.PbDocument, rows.l, cols.l)</div>
+      <div class="function-desc">Create a table.</div>
+      <div class="function-params">
+        <table>
+          <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
+          <tr><td>rows</td><td>Integer</td><td>Number of rows</td></tr>
+          <tr><td>cols</td><td>Integer</td><td>Number of columns</td></tr>
+        </table>
+      </div>
+      <div class="return-type"><strong>Returns:</strong> Table object pointer (PbDocTable).</div>
+    </div>
+
+    <div class="function-block">
+      <div class="function-name">PbDoc_Table_SetStyle(*tbl.PbDocTable, style.s)</div>
+      <div class="function-desc">Set table style. Commonly use "TableGrid" for a bordered table.</div>
+    </div>
+
+    <div class="function-block">
+      <div class="function-name">PbDoc_Table_SetAlignment(*tbl.PbDocTable, alignment.l)</div>
+      <div class="function-desc">Set table alignment.</div>
+    </div>
+
+    <div class="function-block">
+      <div class="function-name">PbDoc_Table_SetColumnWidth(*tbl.PbDocTable, colIndex.l, widthEmu.q)</div>
+      <div class="function-desc">Set column width (EMU units).</div>
+      <div class="example">
+<span class="function">PbDoc_Table_SetColumnWidth</span>(<span class="variable">*table</span>, 0, <span class="function">PbDoc_CmToEmu</span>(5))
+      </div>
+    </div>
+
+    <div class="function-block">
+      <div class="function-name">PbDoc_Table_GetCell(*tbl.PbDocTable, row.l, col.l)</div>
+      <div class="function-desc">Get a cell reference. Row and column indices start from 0.</div>
+      <div class="return-type"><strong>Returns:</strong> Cell object pointer (PbDocCell).</div>
+    </div>
+
+    <div class="function-block" id="PbDoc_Cell_SetText">
+      <div class="function-name">PbDoc_Cell_SetText(*cell.PbDocCell, text.s)</div>
+      <div class="function-desc">Set cell text.</div>
+      <div class="example">
+<span class="comment">; Create a 3-row, 4-column table</span>
+<span class="variable">*table</span> = <span class="function">PbDoc_Document_AddTable</span>(<span class="variable">*doc</span>, 3, 4)
+<span class="function">PbDoc_Table_SetStyle</span>(<span class="variable">*table</span>, <span class="string">"TableGrid"</span>)
+
+<span class="comment">; Fill header row</span>
+<span class="function">PbDoc_Cell_SetText</span>(<span class="function">PbDoc_Table_GetCell</span>(<span class="variable">*table</span>, 0, 0), <span class="string">"Name"</span>)
+<span class="function">PbDoc_Cell_SetText</span>(<span class="function">PbDoc_Table_GetCell</span>(<span class="variable">*table</span>, 0, 1), <span class="string">"Age"</span>)
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== Page Setup ==================== -->
+  <div class="section" id="section">
+    <h2>Page Setup</h2>
+
+    <div class="function-block" id="PbDoc_Section_SetPageSize">
+      <div class="function-name">PbDoc_Section_SetPageSize(*doc.PbDocument, widthTwips.q, heightTwips.q)</div>
+      <div class="function-desc">Set page size (twips units).</div>
+      <div class="example">
+<span class="comment">; A4 paper: 21cm x 29.7cm</span>
+<span class="function">PbDoc_Section_SetPageSize</span>(<span class="variable">*doc</span>, <span class="function">PbDoc_CmToTwips</span>(21), <span class="function">PbDoc_CmToTwips</span>(29.7))
+      </div>
+    </div>
+
+    <div class="function-block" id="PbDoc_Section_SetMargins">
+      <div class="function-name">PbDoc_Section_SetMargins(*doc.PbDocument, top.q, bottom.q, left.q, right.q)</div>
+      <div class="function-desc">Set page margins (twips units).</div>
+      <div class="example">
+<span class="comment">; Word default margins: top/bottom 2.54cm, left/right 3.17cm</span>
+<span class="function">PbDoc_Section_SetMargins</span>(<span class="variable">*doc</span>, <span class="function">PbDoc_CmToTwips</span>(2.54), <span class="function">PbDoc_CmToTwips</span>(2.54), <span class="function">PbDoc_CmToTwips</span>(3.17), <span class="function">PbDoc_CmToTwips</span>(3.17))
+      </div>
+    </div>
+
+    <div class="function-block">
+      <div class="function-name">PbDoc_Section_SetOrientation(*doc.PbDocument, orientation.l)</div>
+      <div class="function-desc">Set page orientation. #PbDoc_ORIENT_PORTRAIT (portrait) or #PbDoc_ORIENT_LANDSCAPE (landscape).</div>
+    </div>
+  </div>
+
+  <!-- ==================== Unit Conversion ==================== -->
+  <div class="section" id="unit">
+    <h2>Unit Conversion</h2>
+    <p>PbDoc uses two internal units: EMU (English Metric Units) and twips. EMU is used for paragraph formatting parameters, and twips are used for page setup parameters.</p>
+
+    <div class="function-block">
+      <div class="function-name">PbDoc_InchesToEmu(inches.d) / PbDoc_CmToEmu(cm.d) / PbDoc_PtToEmu(pt.d)</div>
+      <div class="function-desc">Convert inches/centimeters/points to EMU. Used for paragraph formatting parameters.</div>
+    </div>
+
+    <div class="function-block">
+      <div class="function-name">PbDoc_CmToTwips(cm.d) / PbDoc_InchesToTwips(inches.d) / PbDoc_PtToTwips(pt.d)</div>
+      <div class="function-desc">Convert centimeters/inches/points to twips. Used for page setup parameters.</div>
+    </div>
+
+    <div class="note">
+      <strong>Common conversions:</strong><br>
+      1 inch = 914400 EMU = 1440 twips<br>
+      1 cm = 360000 EMU = 567 twips<br>
+      1 point = 12700 EMU = 20 twips
+    </div>
+  </div>
+
+  <!-- ==================== Enumeration Constants ==================== -->
+  <div class="section" id="enum">
+    <h2>Enumeration Constants</h2>
+
+    <h3>Paragraph Alignment</h3>
+    <table class="function-params">
+      <tr><th>Constant</th><th>Value</th><th>Description</th></tr>
+      <tr><td>#PbDoc_ALIGN_LEFT</td><td>1</td><td>Left align</td></tr>
+      <tr><td>#PbDoc_ALIGN_CENTER</td><td>2</td><td>Center align</td></tr>
+      <tr><td>#PbDoc_ALIGN_RIGHT</td><td>3</td><td>Right align</td></tr>
+      <tr><td>#PbDoc_ALIGN_JUSTIFY</td><td>4</td><td>Justify</td></tr>
+      <tr><td>#PbDoc_ALIGN_DISTRIBUTE</td><td>5</td><td>Distribute</td></tr>
+    </table>
+
+    <h3>Tab Alignment</h3>
+    <table class="function-params">
+      <tr><th>Constant</th><th>Value</th><th>Description</th></tr>
+      <tr><td>#PbDoc_TAB_LEFT</td><td>1</td><td>Left tab</td></tr>
+      <tr><td>#PbDoc_TAB_CENTER</td><td>2</td><td>Center tab</td></tr>
+      <tr><td>#PbDoc_TAB_RIGHT</td><td>3</td><td>Right tab</td></tr>
+      <tr><td>#PbDoc_TAB_DECIMAL</td><td>4</td><td>Decimal tab</td></tr>
+    </table>
+
+    <h3>Tab Leaders</h3>
+    <table class="function-params">
+      <tr><th>Constant</th><th>Value</th><th>Description</th></tr>
+      <tr><td>#PbDoc_TAB_LEADER_NONE</td><td>1</td><td>No leader</td></tr>
+      <tr><td>#PbDoc_TAB_LEADER_DOTS</td><td>2</td><td>Dots (......)</td></tr>
+      <tr><td>#PbDoc_TAB_LEADER_HEAVY</td><td>3</td><td>Heavy dots</td></tr>
+      <tr><td>#PbDoc_TAB_LEADER_DASHES</td><td>4</td><td>Dashes (------)</td></tr>
+      <tr><td>#PbDoc_TAB_LEADER_LINES</td><td>5</td><td>Underscore (______)</td></tr>
+    </table>
+
+    <h3>Underline Types</h3>
+    <table class="function-params">
+      <tr><th>Constant</th><th>Value</th><th>Description</th></tr>
+      <tr><td>#PbDoc_UNDERLINE_NONE</td><td>0</td><td>No underline</td></tr>
+      <tr><td>#PbDoc_UNDERLINE_SINGLE</td><td>1</td><td>Single underline</td></tr>
+      <tr><td>#PbDoc_UNDERLINE_DOUBLE</td><td>2</td><td>Double underline</td></tr>
+      <tr><td>#PbDoc_UNDERLINE_DOTTED</td><td>3</td><td>Dotted underline</td></tr>
+      <tr><td>#PbDoc_UNDERLINE_DASH</td><td>4</td><td>Dashed underline</td></tr>
+      <tr><td>#PbDoc_UNDERLINE_WAVE</td><td>5</td><td>Wavy underline</td></tr>
+      <tr><td>#PbDoc_UNDERLINE_THICK</td><td>6</td><td>Thick underline</td></tr>
+    </table>
+
+    <h3>Break Types</h3>
+    <table class="function-params">
+      <tr><th>Constant</th><th>Value</th><th>Description</th></tr>
+      <tr><td>#PbDoc_BREAK_LINE</td><td>1</td><td>Line break (soft return)</td></tr>
+      <tr><td>#PbDoc_BREAK_PAGE</td><td>2</td><td>Page break</td></tr>
+      <tr><td>#PbDoc_BREAK_COLUMN</td><td>3</td><td>Column break</td></tr>
+    </table>
+
+    <h3>Line Spacing Rules</h3>
+    <table class="function-params">
+      <tr><th>Constant</th><th>Value</th><th>Description</th></tr>
+      <tr><td>#PbDoc_LINE_SPACING_AUTO</td><td>1</td><td>Auto line spacing (multiple)</td></tr>
+      <tr><td>#PbDoc_LINE_SPACING_EXACT</td><td>2</td><td>Exact line spacing (fixed)</td></tr>
+      <tr><td>#PbDoc_LINE_SPACING_AT_LEAST</td><td>3</td><td>At least line spacing (minimum)</td></tr>
+    </table>
+
+    <h3>Page Orientation</h3>
+    <table class="function-params">
+      <tr><th>Constant</th><th>Value</th><th>Description</th></tr>
+      <tr><td>#PbDoc_ORIENT_PORTRAIT</td><td>1</td><td>Portrait</td></tr>
+      <tr><td>#PbDoc_ORIENT_LANDSCAPE</td><td>2</td><td>Landscape</td></tr>
+    </table>
+  </div>
+
+  <!-- ==================== Example Code ==================== -->
+  <div class="section" id="examples">
+    <h2>Example Code</h2>
+
+    <h3>Example 1: Create a Basic Word Document</h3>
+    <div class="example">
+<span class="comment">; PbDoc - Create a basic Word document example</span>
+<span class="keyword">XIncludeFile</span> <span class="string">"../PbDoc.pb"</span>
+
+<span class="function">PbDoc_Init</span>()
+<span class="variable">*doc</span>.<span class="keyword">PbDocument</span> = <span class="function">PbDocument_Create</span>()
+
+<span class="comment">; Set document properties</span>
+<span class="function">PbDocument_SetTitle</span>(<span class="variable">*doc</span>, <span class="string">"My Document"</span>)
+<span class="function">PbDocument_SetAuthor</span>(<span class="variable">*doc</span>, <span class="string">"PbDoc User"</span>)
+
+<span class="comment">; Add heading and paragraph</span>
+<span class="function">PbDoc_Document_AddHeading</span>(<span class="variable">*doc</span>, <span class="string">"Chapter 1 Introduction"</span>, 1)
+<span class="function">PbDoc_Document_AddParagraph</span>(<span class="variable">*doc</span>, <span class="string">"This is the first paragraph."</span>)
+
+<span class="comment">; Save the file</span>
+<span class="function">PbDocument_Save</span>(<span class="variable">*doc</span>, <span class="string">"output.docx"</span>)
+<span class="function">PbDocument_Free</span>(<span class="variable">*doc</span>)
+<span class="function">PbDoc_Cleanup</span>()
+    </div>
+
+    <h3>Example 2: Formatted Text</h3>
+    <div class="example">
+<span class="comment">; Add a multi-Run paragraph (different formatting)</span>
+<span class="variable">*para</span> = <span class="function">PbDoc_Document_AddParagraph</span>(<span class="variable">*doc</span>, <span class="string">""</span>)
+
+<span class="variable">*run1</span> = <span class="function">PbDoc_Paragraph_AddRun</span>(<span class="variable">*para</span>, <span class="string">"Bold text "</span>)
+<span class="function">PbDoc_Font_SetBold</span>(<span class="variable">*run1</span>, <span class="variable">#True</span>)
+
+<span class="variable">*run2</span> = <span class="function">PbDoc_Paragraph_AddRun</span>(<span class="variable">*para</span>, <span class="string">"Red text "</span>)
+<span class="function">PbDoc_Font_SetColorHex</span>(<span class="variable">*run2</span>, <span class="string">"FF0000"</span>)
+
+<span class="variable">*run3</span> = <span class="function">PbDoc_Paragraph_AddRun</span>(<span class="variable">*para</span>, <span class="string">"18pt text"</span>)
+<span class="function">PbDoc_Font_SetSize</span>(<span class="variable">*run3</span>, 18)
+    </div>
+
+    <h3>Example 3: Create a Table</h3>
+    <div class="example">
+<span class="comment">; Create a 3-row, 4-column table</span>
+<span class="variable">*table</span> = <span class="function">PbDoc_Document_AddTable</span>(<span class="variable">*doc</span>, 3, 4)
+<span class="function">PbDoc_Table_SetStyle</span>(<span class="variable">*table</span>, <span class="string">"TableGrid"</span>)
+
+<span class="comment">; Fill header row</span>
+<span class="function">PbDoc_Cell_SetText</span>(<span class="function">PbDoc_Table_GetCell</span>(<span class="variable">*table</span>, 0, 0), <span class="string">"Name"</span>)
+<span class="function">PbDoc_Cell_SetText</span>(<span class="function">PbDoc_Table_GetCell</span>(<span class="variable">*table</span>, 0, 1), <span class="string">"Age"</span>)
+<span class="function">PbDoc_Cell_SetText</span>(<span class="function">PbDoc_Table_GetCell</span>(<span class="variable">*table</span>, 0, 2), <span class="string">"City"</span>)
+<span class="function">PbDoc_Cell_SetText</span>(<span class="function">PbDoc_Table_GetCell</span>(<span class="variable">*table</span>, 0, 3), <span class="string">"Occupation"</span>)
+
+<span class="comment">; Fill data row</span>
+<span class="function">PbDoc_Cell_SetText</span>(<span class="function">PbDoc_Table_GetCell</span>(<span class="variable">*table</span>, 1, 0), <span class="string">"Zhang San"</span>)
+<span class="function">PbDoc_Cell_SetText</span>(<span class="function">PbDoc_Table_GetCell</span>(<span class="variable">*table</span>, 1, 1), <span class="string">"28"</span>)
+<span class="function">PbDoc_Cell_SetText</span>(<span class="function">PbDoc_Table_GetCell</span>(<span class="variable">*table</span>, 1, 2), <span class="string">"Beijing"</span>)
+<span class="function">PbDoc_Cell_SetText</span>(<span class="function">PbDoc_Table_GetCell</span>(<span class="variable">*table</span>, 1, 3), <span class="string">"Engineer"</span>)
+    </div>
+  </div>
+
+  <!-- ==================== Changelog ==================== -->
+  <div class="section" id="changelog">
+    <h2>Version History</h2>
+
+    <h3>v1.3 (2026-04-23)</h3>
+    <ul>
+      <li>[Added] Console comprehensive test example (07_控制台全面测试.pb)</li>
+      <li>[Added] Comprehensive test example (08_全面测试.pb)</li>
+      <li>[Added] README.md project documentation</li>
+      <li>[Added] HTML help documentation (docs\PbDoc_Help.html)</li>
+      <li>[Improved] Enhanced Chinese code comments</li>
+      <li>[Improved] File section partitioning, 35 sections clearly defined</li>
+    </ul>
+
+    <h3>v1.2 (2026-04-23)</h3>
+    <ul>
+      <li>[Added] Underline types (7 types: single/double/dotted/dash/wave/thick)</li>
+      <li>[Added] Strikethrough/double strikethrough</li>
+      <li>[Added] Superscript/subscript</li>
+      <li>[Added] Font name setting</li>
+      <li>[Added] RGB color setting</li>
+      <li>[Added] Highlight color</li>
+      <li>[Added] Left indent/right indent/hanging indent</li>
+      <li>[Added] Line spacing setting (auto/exact/at least three rules)</li>
+      <li>[Added] Page break control (keep with next/keep lines together/widow control)</li>
+      <li>[Added] Paragraph style setting</li>
+      <li>[Added] Break types (line/page/column)</li>
+      <li>[Added] Table alignment and column width setting</li>
+      <li>[Added] Page setup (paper size/margins/orientation/header-footer distance/gutter)</li>
+      <li>[Added] Title style definition</li>
+      <li>[Added] 6 detailed example files (01-06)</li>
+      <li>[Improved] Description text update: "ported from python-docx" → "written with reference to python-docx project"</li>
+      <li>[Improved] Chinese localization of prompt messages</li>
+      <li>[Improved] Code section partitioning, 35 section directory index</li>
+    </ul>
+
+    <h3>v1.1 (2026-04-22)</h3>
+    <ul>
+      <li>[Fixed] Fixed invalid memory access error (address 1101004800)</li>
+      <li>[Fixed] Fixed #PB_Packer_Zip constant not existing (changed to #PB_PackerPlugin_Zip)</li>
+      <li>[Fixed] Fixed PbDoc_Cell_SetText parameter mismatch</li>
+      <li>[Improved] Abandoned MSXML COM, switched to string-based XML construction</li>
+      <li>[Improved] Used PureBasic built-in ZipPacker instead of manual ZIP operations</li>
+      <li>[Improved] Data structure-driven design, all content stored in structures</li>
+    </ul>
+
+    <h3>v1.0 (2026-04-21)</h3>
+    <ul>
+      <li>[Added] Initial project creation, written with reference to the python-docx project</li>
+      <li>[Added] Document creation and saving</li>
+      <li>[Added] Document property settings (title/author/subject/company)</li>
+      <li>[Added] Paragraph operations (add/get text/alignment)</li>
+      <li>[Added] Run operations (add Run/Tab)</li>
+      <li>[Added] Font formatting (bold/italic/color/font size)</li>
+      <li>[Added] Paragraph formatting (first line indent/spacing/TabStop)</li>
+      <li>[Added] Heading operations (levels 1-9)</li>
+      <li>[Added] Hyperlink operations</li>
+      <li>[Added] Page break operations</li>
+      <li>[Added] Table operations (create/style/cells)</li>
+      <li>[Added] Unit conversion functions</li>
+      <li>[Added] Complete XML generation and ZIP packaging</li>
+    </ul>
+  </div>
+
+  <div class="section" id="donate">
+    <h2>Support & Donate</h2>
+    <p>If PbDoc is helpful to you, please consider supporting the developer to continue maintaining and improving this project.</p>
+    <table class="function-params">
+      <tr><th>Method</th><th>Information</th></tr>
+      <tr><td>PayPal</td><td><a href="https://www.paypal.me/lcodecn" target="_blank">https://www.paypal.me/lcodecn</a></td></tr>
+      <tr><td>WeChat</td><td>#付款:lcodecn(经营_lcodecn)/openlib/003</td></tr>
+    </table>
+    <p>Thank you for every bit of support!</p>
+  </div>
+
+  <div class="footer">
+    <p>PbDoc Library v1.3 | Author: lcode.cn | License: Apache 2.0</p>
+  </div>
+
+</div>
+
+</body>
+</html>
